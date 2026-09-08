@@ -14,37 +14,39 @@ const StyledLanguageSwitcher = styled.div`
 const StyledButton = styled.button`
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 12px;
-  background-color: transparent;
+  gap: 8px;
+  padding: 10px 16px;
+  background-color: var(--light-navy);
   border: 1px solid var(--green);
   border-radius: var(--border-radius);
   color: var(--green);
   font-family: var(--font-mono);
-  font-size: var(--fz-xs);
+  font-size: var(--fz-sm);
+  font-weight: 500;
   cursor: pointer;
   transition: var(--transition);
 
   &:hover {
-    background-color: var(--green-tint);
+    background-color: var(--lightest-navy);
+    border-color: var(--green);
   }
 
   .globe {
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
   }
 `;
 
 const StyledDropdown = styled.div`
   position: absolute;
-  top: calc(100% + 10px);
+  top: calc(100% + 8px);
   right: 0;
   background-color: var(--light-navy);
-  border: 1px solid var(--lightest-navy);
+  border: 1px solid var(--green);
   border-radius: var(--border-radius);
-  padding: 10px 0;
-  min-width: 150px;
-  box-shadow: 0 10px 30px -15px var(--navy-shadow);
+  padding: 8px 0;
+  min-width: 180px;
+  box-shadow: 0 10px 30px -10px var(--navy-shadow);
   z-index: 100;
   opacity: ${({ isOpen }) => (isOpen ? 1 : 0)};
   visibility: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')};
@@ -57,12 +59,12 @@ const StyledOption = styled.button`
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 10px 16px;
+  padding: 12px 20px;
   background: none;
   border: none;
-  color: ${({ isActive }) => (isActive ? 'var(--green)' : 'var(--slate)')};
+  color: ${({ isActive }) => (isActive ? 'var(--green)' : 'var(--light-slate)')};
   font-family: var(--font-mono);
-  font-size: var(--fz-xs);
+  font-size: var(--fz-sm);
   text-align: left;
   cursor: pointer;
   transition: var(--transition);
@@ -72,21 +74,43 @@ const StyledOption = styled.button`
     color: var(--green);
   }
 
+  ${({ isActive }) => isActive && `
+    background-color: var(--lightest-navy);
+
+    .checkmark {
+      opacity: 1;
+    }
+  `}
+
+  .left-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
   .flag {
-    font-size: 14px;
-    margin-right: 8px;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1;
   }
 
   .code {
     color: var(--slate);
-    font-size: 10px;
+    font-size: var(--fz-xs);
+    font-weight: 500;
+  }
+
+  .checkmark {
+    opacity: 0;
+    color: var(--green);
+    font-size: 16px;
   }
 `;
 
 const languages = [
-  { code: 'pt', name: 'Português', flag: 'BR' },
-  { code: 'en', name: 'English', flag: 'US' },
-  { code: 'es', name: 'Español', flag: 'ES' },
+  { code: 'pt', name: 'Português', flag: '🇧🇷' },
+  { code: 'en', name: 'English', flag: '🇺🇸' },
+  { code: 'es', name: 'Español', flag: '🇪🇸' },
 ];
 
 const LanguageSwitcher = () => {
@@ -133,11 +157,14 @@ const LanguageSwitcher = () => {
             isActive={language === code}
             onClick={() => handleSelect(code)}
           >
-            <span>
+            <div className="left-content">
               <span className="flag">{flag}</span>
-              {name}
-            </span>
-            <span className="code">{code.toUpperCase()}</span>
+              <span>{name}</span>
+            </div>
+            <div className="right-content">
+              <span className="code">{code.toUpperCase()}</span>
+              <span className="checkmark">✓</span>
+            </div>
           </StyledOption>
         ))}
       </StyledDropdown>

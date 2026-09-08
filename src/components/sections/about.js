@@ -10,9 +10,9 @@ const StyledAboutSection = styled.section`
 
   .inner {
     display: grid;
-    grid-template-columns: 4fr 6fr;
-    grid-gap: 40px;
-    align-items: center;
+    grid-template-columns: 3fr 7fr;
+    grid-gap: 50px;
+    align-items: stretch;
 
     @media (max-width: 900px) {
       grid-template-columns: 1fr;
@@ -52,10 +52,13 @@ const StyledText = styled.div`
 const StyledPic = styled.div`
   position: relative;
   width: 100%;
+  height: 100%;
+  min-height: 400px;
 
   @media (max-width: 900px) {
     margin: 30px auto 0;
     max-width: 600px;
+    min-height: 300px;
   }
 
   .wrapper {
@@ -63,6 +66,7 @@ const StyledPic = styled.div`
     display: block;
     position: relative;
     width: 100%;
+    height: 100%;
     border-radius: var(--border-radius);
     background-color: var(--green);
 
@@ -86,8 +90,14 @@ const StyledPic = styled.div`
       border-radius: var(--border-radius);
       transition: var(--transition);
       width: 100%;
-      height: auto;
+      height: 100%;
+      min-height: 400px;
+      object-fit: cover;
       display: block;
+
+      @media (max-width: 900px) {
+        min-height: 300px;
+      }
     }
 
     &:before,
