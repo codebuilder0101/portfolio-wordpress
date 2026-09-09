@@ -7,16 +7,51 @@
 const path = require('path');
 const _ = require('lodash');
 
+// Every featured project currently ships without a cover image, and Gatsby only
+// infers frontmatter fields that exist on at least one node. Declaring the optional
+// fields explicitly keeps the featured/case-study queries valid either way.
+exports.createSchemaCustomization = ({ actions }) => {
+  actions.createTypes(`
+    type MarkdownRemarkFrontmatter {
+      cover: File @fileByRelativePath
+      type: String
+      slug: String
+      description: String
+      services: [String]
+      external: String
+      github: String
+      cta: String
+      tech: [String]
+    }
+  `);
+};
+
 exports.createPages = async ({ actions, graphql, reporter }) => {
   const { createPage } = actions;
   const postTemplate = path.resolve(`src/templates/post.js`);
   const tagTemplate = path.resolve('src/templates/tag.js');
+  const caseStudyTemplate = path.resolve('src/templates/caseStudy.js');
 
   const result = await graphql(`
     {
       postsRemark: allMarkdownRemark(
         filter: { fileAbsolutePath: { regex: "/content/posts/" } }
         sort: { order: DESC, fields: [frontmatter___date] }
+        limit: 1000
+      ) {
+        edges {
+          node {
+            frontmatter {
+              slug
+            }
+          }
+        }
+      }
+      caseStudies: allMarkdownRemark(
+        filter: {
+          fileAbsolutePath: { regex: "/content/featured/" }
+          frontmatter: { slug: { ne: null } }
+        }
         limit: 1000
       ) {
         edges {
@@ -48,6 +83,17 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
     createPage({
       path: node.frontmatter.slug,
       component: postTemplate,
+      context: {},
+    });
+  });
+
+  // Create case study pages for featured projects that define a slug
+  const caseStudies = result.data.caseStudies.edges;
+
+  caseStudies.forEach(({ node }) => {
+    createPage({
+      path: node.frontmatter.slug,
+      component: caseStudyTemplate,
       context: {},
     });
   });

@@ -1,5 +1,5 @@
 ---
-date: '2024-01-03'
+date: '2024-01-04'
 title: 'E-commerce Solutions'
 company: 'WooCommerce'
 location: 'Remote'

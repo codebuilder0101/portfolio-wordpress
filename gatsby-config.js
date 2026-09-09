@@ -4,7 +4,7 @@ module.exports = {
   siteMetadata: {
     title: 'Davi José da Silva',
     description:
-      'Davi José da Silva is a professional WordPress developer with 10+ years of experience in WordPress website design, development, and custom solutions.',
+      'Davi José da Silva is a professional WordPress and Shopify developer with 10+ years of experience building, redesigning and optimizing high-converting e-commerce stores.',
     siteUrl: 'https://davijosedasilva.com', // No trailing slash allowed!
     image: '/og.png', // Path to your image you placed in the 'static' folder
     twitterUsername: '',

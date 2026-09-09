@@ -14,26 +14,52 @@ const StyledLanguageSwitcher = styled.div`
 const StyledButton = styled.button`
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 16px;
-  background-color: var(--light-navy);
-  border: 1px solid var(--green);
-  border-radius: var(--border-radius);
-  color: var(--green);
+  gap: 7px;
+  padding: 7px 12px;
+  background-color: var(--navy);
+  border: 1px solid var(--lightest-navy);
+  border-radius: 999px;
+  color: var(--lightest-slate);
   font-family: var(--font-mono);
-  font-size: var(--fz-sm);
-  font-weight: 500;
+  line-height: 1;
   cursor: pointer;
   transition: var(--transition);
 
-  &:hover {
-    background-color: var(--lightest-navy);
-    border-color: var(--green);
+  &:hover,
+  &:focus-visible {
+    background-color: var(--light-navy);
+    border-color: var(--slate);
   }
 
+  /* Explicit sizing is required: GlobalStyle sets svg { width: 100%; height: 100% } */
   .globe {
-    width: 18px;
-    height: 18px;
+    flex: none;
+    width: 15px;
+    height: 15px;
+    color: var(--lightest-slate);
+  }
+
+  .region {
+    color: var(--slate);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+
+  .code {
+    color: var(--white);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  .chevron {
+    flex: none;
+    width: 10px;
+    height: 6px;
+    color: var(--slate);
+    transition: var(--transition);
+    transform: ${({ isOpen }) => (isOpen ? 'rotate(180deg)' : 'rotate(0deg)')};
   }
 `;
 
@@ -42,12 +68,13 @@ const StyledDropdown = styled.div`
   top: calc(100% + 8px);
   right: 0;
   background-color: var(--light-navy);
-  border: 1px solid var(--green);
-  border-radius: var(--border-radius);
-  padding: 8px 0;
+  border: 1px solid var(--lightest-navy);
+  border-radius: 8px;
+  padding: 6px 0;
   min-width: 180px;
   box-shadow: 0 10px 30px -10px var(--navy-shadow);
   z-index: 100;
+  overflow: hidden;
   opacity: ${({ isOpen }) => (isOpen ? 1 : 0)};
   visibility: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')};
   transform: ${({ isOpen }) => (isOpen ? 'translateY(0)' : 'translateY(-10px)')};
@@ -59,7 +86,7 @@ const StyledOption = styled.button`
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 12px 20px;
+  padding: 10px 16px;
   background: none;
   border: none;
   color: ${({ isActive }) => (isActive ? 'var(--green)' : 'var(--light-slate)')};
@@ -74,7 +101,9 @@ const StyledOption = styled.button`
     color: var(--green);
   }
 
-  ${({ isActive }) => isActive && `
+  ${({ isActive }) =>
+    isActive &&
+    `
     background-color: var(--lightest-navy);
 
     .checkmark {
@@ -85,32 +114,33 @@ const StyledOption = styled.button`
   .left-content {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
   }
 
-  .flag {
-    font-size: 20px;
-    font-weight: 400;
-    line-height: 1;
+  .right-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
 
-  .code {
+  .region {
     color: var(--slate);
-    font-size: var(--fz-xs);
+    font-size: 11px;
     font-weight: 500;
+    letter-spacing: 0.5px;
   }
 
   .checkmark {
     opacity: 0;
     color: var(--green);
-    font-size: 16px;
+    font-size: 14px;
   }
 `;
 
 const languages = [
-  { code: 'pt', name: 'Português', flag: '🇧🇷' },
-  { code: 'en', name: 'English', flag: '🇺🇸' },
-  { code: 'es', name: 'Español', flag: '🇪🇸' },
+  { code: 'pt', name: 'Português', region: 'BR' },
+  { code: 'en', name: 'English', region: 'US' },
+  { code: 'es', name: 'Español', region: 'ES' },
 ];
 
 const LanguageSwitcher = () => {
@@ -118,10 +148,10 @@ const LanguageSwitcher = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  const currentLang = languages.find(l => l.code === language) || languages[1];
+  const currentLang = languages.find(l => l.code === language) || languages[2];
 
   useEffect(() => {
-    const handleClickOutside = (e) => {
+    const handleClickOutside = e => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setIsOpen(false);
       }
@@ -131,38 +161,49 @@ const LanguageSwitcher = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleSelect = (code) => {
+  const handleSelect = code => {
     setLanguage(code);
     setIsOpen(false);
   };
 
   return (
     <StyledLanguageSwitcher ref={dropdownRef}>
-      <StyledButton onClick={() => setIsOpen(!isOpen)} aria-label="Select language">
-        <svg className="globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <StyledButton
+        isOpen={isOpen}
+        onClick={() => setIsOpen(!isOpen)}
+        aria-label="Select language"
+        aria-haspopup="listbox"
+        aria-expanded={isOpen}>
+        <svg
+          className="globe"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.75">
           <circle cx="12" cy="12" r="10" />
           <line x1="2" y1="12" x2="22" y2="12" />
           <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
         </svg>
-        {currentLang.flag} {currentLang.code.toUpperCase()}
-        <svg width="10" height="6" viewBox="0 0 10 6" fill="currentColor">
+        <span className="region">{currentLang.region}</span>
+        <span className="code">{currentLang.code.toUpperCase()}</span>
+        <svg className="chevron" viewBox="0 0 10 6" fill="none">
           <path d="M1 1l4 4 4-4" stroke="currentColor" strokeWidth="1.5" fill="none" />
         </svg>
       </StyledButton>
 
-      <StyledDropdown isOpen={isOpen}>
-        {languages.map(({ code, name, flag }) => (
+      <StyledDropdown isOpen={isOpen} role="listbox">
+        {languages.map(({ code, name, region }) => (
           <StyledOption
             key={code}
             isActive={language === code}
-            onClick={() => handleSelect(code)}
-          >
+            role="option"
+            aria-selected={language === code}
+            onClick={() => handleSelect(code)}>
             <div className="left-content">
-              <span className="flag">{flag}</span>
               <span>{name}</span>
             </div>
             <div className="right-content">
-              <span className="code">{code.toUpperCase()}</span>
+              <span className="region">{region}</span>
               <span className="checkmark">✓</span>
             </div>
           </StyledOption>

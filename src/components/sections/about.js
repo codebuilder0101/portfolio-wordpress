@@ -7,28 +7,21 @@ import { useLanguage } from '../../context/LanguageContext';
 
 const StyledAboutSection = styled.section`
   max-width: 1200px;
-
-  .inner {
-    display: grid;
-    grid-template-columns: 3fr 7fr;
-    grid-gap: 50px;
-    align-items: stretch;
-
-    @media (max-width: 900px) {
-      grid-template-columns: 1fr;
-    }
-  }
 `;
 
 const StyledText = styled.div`
   ul.skills-list {
     display: grid;
-    grid-template-columns: repeat(2, minmax(140px, 200px));
+    grid-template-columns: repeat(3, minmax(140px, 250px));
     grid-gap: 0 10px;
     padding: 0;
     margin: 20px 0 0 0;
     overflow: hidden;
     list-style: none;
+
+    @media (max-width: 768px) {
+      grid-template-columns: repeat(2, minmax(140px, 200px));
+    }
 
     li {
       position: relative;
@@ -45,84 +38,6 @@ const StyledText = styled.div`
         font-size: var(--fz-sm);
         line-height: 12px;
       }
-    }
-  }
-`;
-
-const StyledPic = styled.div`
-  position: relative;
-  width: 100%;
-  height: 100%;
-  min-height: 400px;
-
-  @media (max-width: 900px) {
-    margin: 30px auto 0;
-    max-width: 600px;
-    min-height: 300px;
-  }
-
-  .wrapper {
-    ${({ theme }) => theme.mixins.boxShadow};
-    display: block;
-    position: relative;
-    width: 100%;
-    height: 100%;
-    border-radius: var(--border-radius);
-    background-color: var(--green);
-
-    &:hover,
-    &:focus {
-      outline: 0;
-      transform: translate(-4px, -4px);
-
-      &:after {
-        transform: translate(8px, 8px);
-      }
-
-      .img {
-        filter: none;
-        mix-blend-mode: normal;
-      }
-    }
-
-    .img {
-      position: relative;
-      border-radius: var(--border-radius);
-      transition: var(--transition);
-      width: 100%;
-      height: 100%;
-      min-height: 400px;
-      object-fit: cover;
-      display: block;
-
-      @media (max-width: 900px) {
-        min-height: 300px;
-      }
-    }
-
-    &:before,
-    &:after {
-      content: '';
-      display: block;
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      border-radius: var(--border-radius);
-      transition: var(--transition);
-    }
-
-    &:before {
-      top: 0;
-      left: 0;
-      background-color: var(--navy);
-      mix-blend-mode: screen;
-    }
-
-    &:after {
-      border: 2px solid var(--green);
-      top: 20px;
-      left: 20px;
-      z-index: -1;
     }
   }
 `;
@@ -157,16 +72,6 @@ const About = () => {
             {translations.skills && translations.skills.map((skill, i) => <li key={i}>{skill}</li>)}
           </ul>
         </StyledText>
-
-        <StyledPic>
-          <div className="wrapper">
-            <img
-              className="img"
-              src="/service.png"
-              alt="WordPress Development Service"
-            />
-          </div>
-        </StyledPic>
       </div>
     </StyledAboutSection>
   );
